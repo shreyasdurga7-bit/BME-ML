@@ -1,0 +1,1 @@
+A collection of machine learning projects applying scikit-learn to biomedical engineering datasets. Projects cover classification, regression, and signal processing across ECG, bone density, and EMG data.
