@@ -1,0 +1,12 @@
+numpy==2.4.6
+pandas==3.0.3
+scipy==1.17.1
+scikit-learn==1.9.0
+imbalanced-learn==0.14.2
+PyWavelets==1.8.0
+wfdb==4.3.1
+matplotlib==3.10.9
+seaborn==0.13.2
+joblib==1.5.3
+jupyter==1.1.1
+ipykernel==7.3.0

@@ -1,0 +1,6 @@
+{
+  "model": "voting",
+  "strategy": "classweight",
+  "macro_f1": 0.5019777382182817,
+  "recall_V": 0.9521887612542689
+}
