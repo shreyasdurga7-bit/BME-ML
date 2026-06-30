@@ -8,10 +8,8 @@ writes everything to a CSV ready for ML classification.
 
 Usage:
     python src/features.py
-    python src/features.py --records 100 101 --output features.csv
 """
 
-import argparse
 from pathlib import Path
 
 import numpy as np
@@ -407,25 +405,19 @@ def extract_record_features(record_name: str, data_dir: Path = DATA_DIR) -> pd.D
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--records", nargs="*", default=None, help="Record names to process (default: all in data/RECORDS)")
-    parser.add_argument("--data-dir", type=Path, default=DATA_DIR, help="Directory containing MIT-BIH .dat/.hea/.atr files")
-    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT, help="Output CSV path")
-    args = parser.parse_args()
-
-    records = args.records or list_records(args.data_dir)
+    records = list_records(DATA_DIR)
 
     all_features = []
     for record_name in records:
         print(f"Extracting features for record {record_name}...")
         try:
-            all_features.append(extract_record_features(record_name, args.data_dir))
+            all_features.append(extract_record_features(record_name, DATA_DIR))
         except FileNotFoundError as e:
             print(f"  skipping {record_name}: {e}")
 
     features_df = pd.concat(all_features, ignore_index=True)
-    features_df.to_csv(args.output, index=False)
-    print(f"Wrote {len(features_df)} beat feature rows from {len(all_features)} records to {args.output}")
+    features_df.to_csv(DEFAULT_OUTPUT, index=False)
+    print(f"Wrote {len(features_df)} beat feature rows from {len(all_features)} records to {DEFAULT_OUTPUT}")
 
 
 if __name__ == "__main__":

@@ -77,31 +77,17 @@ QUICK_PARAM_GRIDS = {
 
 
 def load_features(csv_path: Path = DEFAULT_FEATURES_CSV) -> pd.DataFrame:
-    """Load the beat-level feature table written by ``features.py``.
-
-    Args:
-        csv_path: Path to the features CSV.
-
-    Returns:
-        Raw feature DataFrame, one row per beat.
-    """
+    #Load CSV as a DataFrame
+    #Args: Path to the features CSV
+    #Returns: Raw feature DataFrame, one row per beat
     return pd.read_csv(csv_path)
 
 
 def clean_features(df: pd.DataFrame) -> pd.DataFrame:
-    """Clean known data artifacts in the raw feature table.
-
-    Drops the four paced-rhythm records excluded by the standard
-    inter-patient split, caps implausibly long RR intervals (annotation
-    gaps, not real beat-to-beat intervals) to NaN, and median-imputes any
-    remaining NaNs (first/last beat of a record has no RR neighbor).
-
-    Args:
-        df: Raw feature DataFrame from ``load_features``.
-
-    Returns:
-        Cleaned copy of the DataFrame, same shape minus excluded records.
-    """
+    #Exluded records 102, 104, 107, 217 due to rythm being dominated by pacemaker
+    #Drops implausible intervals and fills them with the mean of the column
+    #Args: Raw feature DataFrame from produces by "load_features"
+    #Returns: Cleaned copy of the DataFrame, same shape minus excluded records
     excluded = {102, 104, 107, 217}
     df = df[~df["record"].isin(excluded)].copy()
 
@@ -115,15 +101,9 @@ def clean_features(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def ds_split(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Partition the feature table into DS1 (train) and DS2 (test) by record.
-
-    Args:
-        df: Cleaned feature DataFrame.
-
-    Returns:
-        (ds1_df, ds2_df) — disjoint by record, per the literature-standard
-        inter-patient split, guaranteeing no patient appears in both.
-    """
+    #Split the feature table into DS1 (train) and DS2 (test) according to the literature-standard inter-patient partition
+    #Args: Cleaned feature DataFrame (output of ``clean_features``)
+    #Returns: (ds1_df, ds2_df) — disjoint by record
     ds1 = df[df["record"].isin(DS1_RECORDS)].copy()
     ds2 = df[df["record"].isin(DS2_RECORDS)].copy()
     return ds1, ds2
